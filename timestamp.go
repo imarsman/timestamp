@@ -97,13 +97,11 @@ func init() {
 // Can view allocation analysis with
 //   go build -gcflags '-m -m' timestamp.go 2>&1 |less
 
-// OffsetForLocation get offset data for a named zone such a America/Tornto or EST
-// or MST. Based on date the offset for a zone can differ, with, for example, an
-// offset of -0500 for EST in the summer and -0400 for EST in the winter. This
-// assumes that a year, month, and day is available and have been used to create
-// the date to be analyzed. Based on this the offset for the supplied zone name
-// is obtained. This has to be tested more, in particular the calculations to
-// get the minutes.
+// OffsetForLocation get offset data for a named zone such a America/Tornto or EST or MST. Based on date the offset for
+// a zone can differ, with, for example, an offset of -0500 for EST in the summer and -0400 for EST in the winter. This
+// assumes that a year, month, and day is available and have been used to create the date to be analyzed. Based on this
+// the offset for the supplied zone name is obtained. This has to be tested more, in particular the calculations to get
+// the minutes.
 //
 // Get integer value of hours offset
 //   hours = int(d.Hours())
@@ -390,42 +388,6 @@ func ISO8601(t time.Time) string {
 // is desired set location to time.UTC first
 func ISO8601Msec(t time.Time) string {
 	return t.Format("2006-01-02T15:04:05.000-07:00")
-}
-
-// ISO8601InLocation timestamp long format string result in location
-//   "2006-01-02T15:04:05-07:00"
-//
-// Result will be in whatever the location the incoming time is set to. If UTC
-// is desired set location to time.UTC first
-func ISO8601InLocation(t time.Time, location *time.Location) string {
-	return t.Format("2006-01-02T15:04:05-07:00")
-}
-
-// ISO8601MsecInLocation ISO-8601 longtimestamp with msec in location
-//   "2006-01-02T15:04:05.000-07:00"
-//
-// Result will be in whatever the location the incoming time is set to. If UTC
-// is desired set location to time.UTC first
-func ISO8601MsecInLocation(t time.Time, location *time.Location) string {
-	return t.Format("2006-01-02T15:04:05.000-07:00")
-}
-
-// ISO8601CompactInLocation timestamp with no sub seconds in location
-//   "20060102T150405-0700"
-//
-// Result will be in whatever the location the incoming time is set to. If UTC
-// is desired set location to time.UTC first
-func ISO8601CompactInLocation(t time.Time, location *time.Location) string {
-	return t.Format("20060102T150405-0700")
-}
-
-// ISO8601CompactMsecInLocation timestamp with no seconds in location
-//   "20060102T150405.000-0700"
-//
-// Result will be in whatever the location the incoming time is set to. If UTC
-// is desired set location to time.UTC first
-func ISO8601CompactMsecInLocation(t time.Time, location *time.Location) string {
-	return t.Format("20060102T150405.000-0700")
 }
 
 // StartTimeIsBeforeEndTime if time 1 is before time 2 return true, else false

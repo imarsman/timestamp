@@ -161,30 +161,6 @@ func intPow(n, m int) int {
 	return result
 }
 
-// StringToInt convert a string with no decimal spaces to int.
-// It's slower by a tiny amount than Atoi and will be removed.
-func StringToInt(input string) (result int, err error) {
-	var runes []rune = []rune(input)
-	var l int = len(runes)
-	if l > 9 {
-		err = errors.New("length greater than 9")
-		return
-	}
-
-	for i := 0; i < l; i++ {
-		r := runes[i]
-		if unicode.IsDigit(r) {
-			var num int = int(r) - 48 // 48 is 0 so any digit will be an offset from that
-			var pow int = intPow(10, l-i-1)
-			result = result + num*pow
-		} else {
-			err = errors.New("non digit in input")
-			return
-		}
-	}
-	return
-}
-
 // ParseInUTC parse for all timestamps, defaulting to UTC, and return UTC zoned
 // time
 func ParseInUTC(timeStr string) (time.Time, error) {
@@ -623,7 +599,6 @@ func ParseISOTimestamp(timeStr string, location *time.Location) (t time.Time, er
 			xfmtBuf := new(xfmt.Buffer)
 			xfmtBuf.S("timestamp.ParseISOTimestamp: zone is of length ").D(zoneLen).S(" wich is not enough to detect zone")
 
-			// errors.New escapes to heap
 			err = errors.New(BytesToString(xfmtBuf.Bytes()...))
 			return
 
@@ -653,9 +628,8 @@ func ParseISOTimestamp(timeStr string, location *time.Location) (t time.Time, er
 	// This will need to be recalculated
 	zoneLen = len(zonePart)
 
-	// Allow for just dates and convert to timestamp with zero valued time
-	// parts. Since we are fixing it here it will pass the next tests if nothing
-	// else is wrong or missing.
+	// Allow for just dates and convert to timestamp with zero valued time parts. Since we are fixing it here it will
+	// pass the next tests if nothing else is wrong or missing.
 	if hourLen == 0 && minuteLen == 0 && secondLen == 0 {
 		hourPart = append(hourPart, '0', '0')
 		minutePart = append(minutePart, '0', '0')
@@ -664,12 +638,10 @@ func ParseISOTimestamp(timeStr string, location *time.Location) (t time.Time, er
 		hourLen, minuteLen, secondLen = hourMax, minuteMax, secondMax
 	}
 
-	// Error if any part does not contain enough characters. This could happen
-	// easily if for instance a year had 2 digits instead of 4. If this happened
-	// year would take 4 digits, month would take 2, day would take 2, hour
-	// would take 2, minute would take 2, and second would get none. We are thus
-	// requiring that all date and time parts be fully allocated even if we
-	// can't tell where the problem started.
+	// Error if any part does not contain enough characters. This could happen easily if for instance a year had 2
+	// digits instead of 4. If this happened year would take 4 digits, month would take 2, day would take 2, hour would
+	// take 2, minute would take 2, and second would get none. We are thus requiring that all date and time parts be
+	// fully allocated even if we can't tell where the problem started.
 
 	// We have previously made sure that year has 4 digits
 	if yearLen != yearMax {
@@ -838,7 +810,6 @@ func ParseISOTimestamp(timeStr string, location *time.Location) (t time.Time, er
 	if isZero(hourOffsetParts...) == false {
 		// Evaluate hour offset from the timestamp value
 		// Should not error since only digits were place in slice
-		// offsetH, err = StringToInt(RunesToString(hourOffsetParts...))
 		offsetH, err = strconv.Atoi(utility.RunesToString(hourOffsetParts...))
 		if err != nil {
 			return
@@ -850,7 +821,6 @@ func ParseISOTimestamp(timeStr string, location *time.Location) (t time.Time, er
 	if isZero(minuteOffsetParts...) == false {
 		// Evaluate minute offset from the timestamp value
 		// Should not error since only digits were place in slice
-		// offsetM, err = StringToInt(RunesToString(minuteOffsetParts...))
 		offsetM, err = strconv.Atoi(utility.RunesToString(minuteOffsetParts...))
 		if err != nil {
 			return
