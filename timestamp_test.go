@@ -60,7 +60,7 @@ func checkDate(t *testing.T, input string, location *time.Location) (
 	}
 	is.NoErr(err)
 
-	parsed = timestamp.ISO8601MsecInLocation(calculated, calculated.Location())
+	parsed = timestamp.ISO8601Msec(calculated)
 
 	calculatedOffset = timestamp.OffsetForTime(calculated)
 
@@ -822,35 +822,35 @@ func TestZoneTimeFmt(t *testing.T) {
 }
 
 // Test conversion of string to int
-func TestStringToInt(t *testing.T) {
-	is := is.New(t)
-	result, err := timestamp.StringToInt("123456789")
-	is.NoErr(err)
-	t.Log(result)
-	result, err = timestamp.StringToInt("1234567090")
-	is.True(err != nil)
-	t.Log("Got error - expected", err)
-}
+// func TestStringToInt(t *testing.T) {
+// 	is := is.New(t)
+// 	result, err := timestamp.StringToInt("123456789")
+// 	is.NoErr(err)
+// 	t.Log(result)
+// 	result, err = timestamp.StringToInt("1234567090")
+// 	is.True(err != nil)
+// 	t.Log("Got error - expected", err)
+// }
 
 // Benchmark the string to int function
-func BenchmarkStringToInt(b *testing.B) {
-	is := is.New(b)
+// func BenchmarkStringToInt(b *testing.B) {
+// 	is := is.New(b)
 
-	var err error
-	var result int
+// 	var err error
+// 	var result int
 
-	b.SetBytes(bechmarkBytesPerOp)
-	b.ReportAllocs()
-	b.SetParallelism(30)
-	b.RunParallel(func(pb *testing.PB) {
-		for pb.Next() {
-			result, err = timestamp.StringToInt("123456789")
-		}
-	})
+// 	b.SetBytes(bechmarkBytesPerOp)
+// 	b.ReportAllocs()
+// 	b.SetParallelism(30)
+// 	b.RunParallel(func(pb *testing.PB) {
+// 		for pb.Next() {
+// 			result, err = timestamp.StringToInt("123456789")
+// 		}
+// 	})
 
-	is.True(result != 0) // Should not be default null/0
-	is.NoErr(err)        // Parsing should not have caused an error
-}
+// 	is.True(result != 0) // Should not be default null/0
+// 	is.NoErr(err)        // Parsing should not have caused an error
+// }
 
 // Benchmark strconv.Atoi for comparison with the custom function
 func BenchmarkStringToIntAtoi(b *testing.B) {
